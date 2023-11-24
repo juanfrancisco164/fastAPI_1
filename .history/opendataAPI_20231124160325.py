@@ -80,3 +80,4 @@ async def get_personas_fisicas_data(provincia88: ProvinciaClass):
     return features
 
 # -------------------------------------------------------------------------------------------------------- #
+dir = os.path.dirname(__file__)
