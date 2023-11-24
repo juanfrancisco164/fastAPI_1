@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Empresas activas en España</title>
+    <style>
+        body {
+            background-color: rgb(179, 179, 179);
+            text-align: center;
+            color: rgb(0, 0, 0);
+        }        
+        
+        h1 {
+            color: rgb(255, 255, 255);
+        }
+        
+        p {
+            font-size: 18px;
+        }        
+    </style>
+</head>
+<body>
+    <h1>Empresas activas en España</h1>
+    <p>En esta tarea de FastAPI podemos consultar las empresas activas en España</p>
+    <p>Solamente existen datos entre 1999 y 2017</p>
+
+    <p>
+        Inserte aquí la provincia que quiere consultar:
+        <br>
+        <input name="Provincia" id="input_prov">
+        <button name="buttonProv" onclick="sendProv()">Consultar</button>
+        <br>
+        Seleccione el año:
+        <br>
+        <select id="selectAño">
+            <option value="1999">1999</option>
+            <option value="2000">2000</option>
+            <option value="2001">2001</option>
+            <option value="2002">2002</option>
+            <option value="2003">2003</option>
+            <option value="2004">2004</option>
+            <option value="2005">2005</option>
+            <option value="2006">2006</option>
+            <option value="2007">2007</option>
+            <option value="2008">2008</option>
+            <option value="2009">2009</option>
+            <option value="2010">2010</option>
+            <option value="2011">2011</option>
+            <option value="2012">2012</option>
+            <option value="2013">2013</option>
+            <option value="2014">2014</option>
+            <option value="2015">2015</option>
+            <option value="2016">2016</option>
+            <option value="2017">2017</option>
+        </select>
+    </p>
+
+    <div id="consulta"></div>
+
+    <div id="sociedadDiv"></div>
+    
+</body>
+
+<script>
+    const API_host = "http://127.0.0.1:8000/provincias"
+
+    async function sendProv () {
+        const provinciaInput = document.getElementById("input_prov").value;
+        const añoSeleccionado = document.getElementById("selectAño").value;
+
+        const json = {
+            provincia: provinciaInput
+        };
+
+        const response = await fetch(API_host, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(json)
+        })
+
+        const data = await response.json()
+        console.log(data)
+
+        const filteredData = {
+            Texto: data[0].attributes.Texto,
+            [`Total_${añoSeleccionado}`]: data[0].attributes[`Total_${añoSeleccionado}`]
+        };
+    
+        const consultaDiv = document.getElementById("consulta");
+        consultaDiv.innerHTML = "";
+    
+        for (const key in filteredData) {
+            const paragraph = document.createElement("p");
+            paragraph.textContent = `${key}: ${filteredData[key]}`;
+            consultaDiv.appendChild(paragraph);
+        }
+
+        const sociedadDiv = document.getElementById("sociedadDiv");
+            sociedadDiv.innerHTML = "";
+    }
+</script>
+</html>
